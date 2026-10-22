@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.davenieljessondjiwandana.assignmentweek5.soal1.ui.screen.Soal1ExpenseScreen
 import com.davenieljessondjiwandana.assignmentweek5.ui.theme.AssignmentWeek5Theme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AssignmentWeek5Theme {
-
+                Soal1ExpenseScreen()
             }
         }
     }
@@ -30,6 +31,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SoalPreview() {
     AssignmentWeek5Theme {
-
+        Soal1ExpenseScreen()
     }
 }
