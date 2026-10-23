@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.davenieljessondjiwandana.assignmentweek5.soal1.ui.screen.Soal1ExpenseScreen
+import com.davenieljessondjiwandana.assignmentweek5.soal2.ui.screen.Soal2PageStateScreen
 import com.davenieljessondjiwandana.assignmentweek5.ui.theme.AssignmentWeek5Theme
 
 class MainActivity : ComponentActivity() {
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AssignmentWeek5Theme {
                 Soal1ExpenseScreen()
+                //Soal2PageStateScreen()
             }
         }
     }
@@ -32,5 +34,6 @@ class MainActivity : ComponentActivity() {
 fun SoalPreview() {
     AssignmentWeek5Theme {
         Soal1ExpenseScreen()
+        //Soal2PageStateScreen()
     }
 }
