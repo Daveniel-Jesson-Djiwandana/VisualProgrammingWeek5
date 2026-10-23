@@ -26,6 +26,14 @@ class ExpenseViewModel: ViewModel() {
     val namaError: StateFlow<String?> = _namaError.asStateFlow()
     private val _amountError = MutableStateFlow<String?>(null)
     val amountError: StateFlow<String?> = _amountError.asStateFlow()
+    private val _lagiEdit = MutableStateFlow<Expense?>(null)
+    val lagiEdit: StateFlow<Expense?> = _lagiEdit.asStateFlow()
+    private val _editAmount = MutableStateFlow("")
+    val editAmount = _editAmount.asStateFlow()
+    private val _editError = MutableStateFlow(false)
+    val editError = _editError.asStateFlow()
+
+
     private fun nextId(): Int {
         val idNow = if (_expenseList.value.isEmpty()) {0}
             else {_expenseList.value.last().id}
@@ -79,6 +87,34 @@ class ExpenseViewModel: ViewModel() {
         return true
 
 
+    }
+
+    fun edit(expense: Expense) {
+        _lagiEdit.value = expense
+        _editAmount.value = expense.amount.toString()
+        _editError.value = false
+    }
+    fun editAmount(newAmount: String) {
+        _editAmount.value = newAmount.filter {it.isDigit()}
+        _editError.value = false
+    }
+    fun cancel() {
+        _lagiEdit.value = null
+    }
+    fun save() {
+        val expense = _lagiEdit.value
+        if (expense == null) {
+            return
+        }
+        if (updateExpense(expense.id, _editAmount.value)) {
+            _lagiEdit.value = null
+        } else {
+            _editError.value = true
+        }
+    }
+
+    fun nominalFormat(amount: Int):String {
+        return "Rp "+String.format("%,d", amount).replace(',', '.')
     }
 
 }

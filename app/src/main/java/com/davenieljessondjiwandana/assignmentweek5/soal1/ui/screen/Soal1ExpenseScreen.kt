@@ -1,6 +1,9 @@
 package com.davenieljessondjiwandana.assignmentweek5.soal1.ui.screen
 
 
+import android.R.attr.label
+import android.R.attr.singleLine
+import android.R.id.edit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,9 +35,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.davenieljessondjiwandana.assignmentweek5.soal1.model.Expense
-import com.davenieljessondjiwandana.assignmentweek5.soal1.util.nominalFormat
 import com.davenieljessondjiwandana.assignmentweek5.soal1.viewmodel.ExpenseViewModel
 
 @Composable
@@ -55,9 +54,9 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
     val namaError by viewmodel.namaError.collectAsState()
     val amountError by viewmodel.amountError.collectAsState()
 
-    var lagiEdit by rememberSaveable {mutableStateOf<Expense?>(null)}
-    var editanText by rememberSaveable {mutableStateOf("")}
-    var editanError by rememberSaveable {mutableStateOf(false)}
+    val lagiEdit by viewmodel.lagiEdit.collectAsState()
+    val editanText by viewmodel.editAmount.collectAsState()
+    val editanError by viewmodel.editError.collectAsState()
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -66,7 +65,7 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
             Text("Expenses", fontSize = 30.sp, fontWeight = FontWeight.Bold)
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text("Total Expenses : ${nominalFormat(viewmodel.total())}", fontSize = 20.sp)
+            Text("Total Expenses : ${viewmodel.nominalFormat(viewmodel.total())}", fontSize = 20.sp)
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -141,10 +140,7 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = editanText,
-                        onValueChange = {
-                            editanText = it.filter {c ->c.isDigit()}
-                            editanError = false
-                        },
+                        onValueChange = viewmodel::editAmount,
                         label = {Text("Amount of Expense")},
                         singleLine = true,
                         isError = editanError,
@@ -165,18 +161,10 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
                             errorSupportingTextColor = Color.Red)
                     )
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextButton(onClick = {
-                            lagiEdit = null
-                        }) {
+                        TextButton(onClick = viewmodel::cancel) {
                             Text("Cancel", color = Color.Red)
                         }
-                        TextButton(onClick = {
-                            if (viewmodel.updateExpense(edit.id, editanText)) {
-                                lagiEdit = null
-                            } else {
-                                editanError = true
-                            }
-                        }) {
+                        TextButton(onClick = viewmodel::save) {
                             Text("Save", color = Color.Black)
                         }
                     }
@@ -198,14 +186,10 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
                             .padding(vertical = 20.dp), verticalArrangement = Arrangement.Center) {
                             Text("Name : ${expense.name}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("${nominalFormat(expense.amount)}", fontSize = 14.sp)
+                            Text("${viewmodel.nominalFormat(expense.amount)}", fontSize = 14.sp)
                         }
                         IconButton(
-                            onClick = {
-                                lagiEdit = expense
-                                editanText = expense.amount.toString()
-                                editanError = false
-                            }
+                            onClick = {viewmodel.edit(expense)}
                         ) {
                             Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = Color(0xFFC99700))
                         }
