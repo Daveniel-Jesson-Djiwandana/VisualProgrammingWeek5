@@ -13,8 +13,10 @@ class ExpenseViewModel: ViewModel() {
     val expenseList: StateFlow<List<Expense>> = _expenseList.asStateFlow()
 
     // total?? mestinya total juga di viewmodel ini?
-    fun total(): Int {
-        return _expenseList.value.sumOf { it.amount }
+    private val _total = MutableStateFlow(0)
+    val total: StateFlow<Int> = _total.asStateFlow()
+    private fun total() {
+        _total.value = _expenseList.value.sumOf {it.amount}
     }
 
     //inputan dari user
@@ -60,6 +62,7 @@ class ExpenseViewModel: ViewModel() {
             return
         }
         _expenseList.update {it + Expense(nextId(), namaTemp, amountTemp)}
+        total()
         _nama.value = ""
         _amount.value = ""
         _namaError.value = null
@@ -69,6 +72,7 @@ class ExpenseViewModel: ViewModel() {
         _expenseList.update { list ->
             list.filter{it.id != id}
         }
+        total()
     }
     fun updateExpense(id: Int, newAmount: String): Boolean {
         val amountTemp: Int? = newAmount.filter {it.isDigit()}.toIntOrNull()
@@ -84,6 +88,7 @@ class ExpenseViewModel: ViewModel() {
                 }
             }
         }
+        total()
         return true
 
 

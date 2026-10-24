@@ -53,6 +53,7 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
     val amount by viewmodel.amount.collectAsState()
     val namaError by viewmodel.namaError.collectAsState()
     val amountError by viewmodel.amountError.collectAsState()
+    val total by viewmodel.total.collectAsState()
 
     val lagiEdit by viewmodel.lagiEdit.collectAsState()
     val editanText by viewmodel.editAmount.collectAsState()
@@ -65,7 +66,7 @@ fun Soal1ExpenseScreen(viewmodel: ExpenseViewModel= viewModel()) {
             Text("Expenses", fontSize = 30.sp, fontWeight = FontWeight.Bold)
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text("Total Expenses : ${viewmodel.nominalFormat(viewmodel.total())}", fontSize = 20.sp)
+            Text("Total Expenses : ${viewmodel.nominalFormat(total)}", fontSize = 20.sp)
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
